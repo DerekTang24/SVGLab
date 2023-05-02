@@ -1,0 +1,171 @@
+C:\Users\derek\Desktop\index.html<html>
+  <head>
+    <title>Thermometer Lab</title>
+  </head>
+
+  <body>
+    <h1>Thermometer Lab</h1>
+    <div>
+      <svg
+        version="1.1"
+        viewBox="0 0 300 300"
+        xmlns="http://www.w3.org/2000/svg"
+        height="50%"
+        width="75%"
+      >
+        <style>
+          #glass {
+            fill: #ffffff;
+            stroke: #cccccc;
+            stroke-width: 3;
+          }
+
+          #container {
+            fill: #ffffff;
+            stroke: #000000;
+            stroke-width: 5;
+          }
+        </style>
+
+        <rect id="container" x="10" y="10" width="100" height="210" rx="15" />
+
+        <g id="glass">
+          <rect x="45" y="20" width="30" height="160" rx="15" />
+          <ellipse cx="60" cy="180" rx="30" ry="30" />
+          <rect x="46.5" y="22" width="27" height="165" rx="15" stroke="none" />
+        </g>
+        <g id="liquid">
+          <rect
+            x="54"
+            y="28"
+            width="12"
+            height="160"
+            rx="6"
+            fill="red"
+            id="col"
+            class="liq"
+          />
+          <ellipse cx="60" cy="180" rx="22" ry="22" fill="red" id="cir" />
+          <!-- <rect x="54" y="23" width="12" height="160" rx="6" stroke="none" fill="red"/> -->
+          <path
+            d=" M 58 195 A 15 15 0 0 1 50 169"
+            stroke="white"
+            stroke-width="2"
+            fill="none"
+          />
+          <path
+            d=" M 53 167 A 15 15 0 0 1 61 165"
+            stroke="white"
+            stroke-width="2"
+            fill="none"
+          />
+        </g>
+      </svg>
+      <fieldset>
+        <legend>Degree Type</legend>
+
+        <div>
+          <input
+            type="radio"
+            id="F"
+            name="degree"
+            value="F"
+            onchange="changeData()"
+            checked
+          />
+          <label for="F">F</label>
+        </div>
+
+        <div>
+          <input
+            type="radio"
+            id="C"
+            name="degree"
+            value="C"
+            onchange="changeData()"
+          />
+          <label for="C">C</label>
+        </div>
+      </fieldset>
+      <input
+        type="range"
+        min="0"
+        max="130"
+        value="130"
+        class="slider"
+        id="temp"
+        onchange="changeData()"
+      />
+    </div>
+    <script>
+      changeData();
+      function changeData() {
+        const svg = document.getElementsByTagName("svg")[0];
+        const temporaries = document.getElementsByClassName("temporary");
+        const fBut = document.getElementById("F").checked;
+        const col = document.getElementById("col");
+        const cir = document.getElementById("cir");
+        const slider = parseInt(document.getElementById("temp").value);
+        const tempF = (slider * 212) / 130;
+        if (temporaries.length !== 0) {
+          const arr = [...temporaries];
+          arr.forEach((e) => {
+            svg.removeChild(e);
+          });
+        }
+        col.setAttribute("height", slider + 14);
+        col.setAttribute("y", 158 - slider);
+        if (tempF <= 32) {
+          col.setAttribute("fill", "blue");
+          cir.setAttribute("fill", "blue");
+        } else if (tempF <= 160) {
+          col.setAttribute("fill", "orange");
+          cir.setAttribute("fill", "orange");
+        } else {
+          col.setAttribute("fill", "red");
+          cir.setAttribute("fill", "red");
+        }
+        for (i = 0; i < 5; i++) {
+          const elem = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          elem.setAttribute("class", "temporary");
+          elem.setAttribute("x", 76);
+          elem.setAttribute("y", 28 + (i * 110) / 4);
+          elem.setAttribute("width", 10);
+          elem.setAttribute("height", 5);
+          elem.setAttribute("fill", "black");
+          svg.appendChild(elem);
+          const elem2 = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          elem2.setAttribute("class", "temporary");
+          elem2.setAttribute("x", 76);
+          elem2.setAttribute("y", 41.75 + (i * 110) / 4);
+          elem2.setAttribute("width", 5);
+          elem2.setAttribute("height", 5);
+          elem2.setAttribute("fill", "black");
+          svg.appendChild(elem2);
+
+          const txt = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          txt.setAttribute("class", "temporary");
+          txt.setAttribute("x", 88);
+          txt.setAttribute("y", 33 + (i * 110) / 4);
+          txt.setAttribute("fill", "black");
+          txt.setAttribute("font-size", 8);
+          if (fBut) {
+            txt.innerHTML = `${212 - (i * 180) / 4}F`;
+          } else {
+            txt.innerHTML = `${100 - (i * 100) / 4}C`;
+          }
+          svg.appendChild(txt);
+        }
+      }
+    </script>
+  </body>
+</html>
